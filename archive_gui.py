@@ -1,34 +1,45 @@
-#!/usr/bin/env python
-
 # Extracts a zip archive while converting file names from Shift-JIS encoding to UTF-8.
 #
-# Example:
-#   python unzip-jp.py archive.zip
-#
-#       Creates a directory `archive` and extracts the archive there.
-#
+# Will open three dialogs sequentially.
+# First dialog to select the zip file.
+# Second dialog for entering the password (optionally).
+# Third dialog to select save location of extracted zip.
+
 import zipfile
 import sys
 import os
 import codecs
 
-if len(sys.argv) < 2:
-    print('No archive name.')
-    print('')
-    print('Usage: unzip-jp archive [password]')
+import tkinter as tk
+import tkinter.filedialog as fd
+import tkinter.simpledialog as sd
+
+file_path_string = fd.askopenfilename(title='Select zip file.', filetypes=[
+                                     ('ZIP file', '.zip'),
+                                     ])
+
+password_string = sd.askstring(title='Password',
+                               prompt='Password (leave blank if not password protected):')
+
+save_directory_string = fd.askdirectory(title='Save location.')
+
+if any([len(file_path_string) < 1, file_path_string is None, len(save_directory_string) < 1, save_directory_string is None]):
     exit(1)
 
-name = sys.argv[1]
+name = file_path_string
 
-if len(sys.argv) > 2:
-    password = sys.argv[2]
+if len(password_string) > 0:
+    password = password_string
 else:
     password = None
 
 directory = os.path.splitext(os.path.basename(name))[0]
 
-if not os.path.exists(directory):
-    os.makedirs(directory)
+print(directory)
+
+if not os.path.exists(os.path.join(save_directory_string, directory)):
+    os.makedirs(os.path.join(save_directory_string, directory))
+    directory = os.path.join(save_directory_string, directory)
 
 with zipfile.ZipFile(name, 'r') as z:
     if password:

@@ -15,7 +15,7 @@ Run the program as described in [Run Locally](#run-locally).
 
 ### Express
 
-Download the latest exe file from the release tab and execute it.
+Download the latest exe file from the [release tab](https://github.com/saberzero1/unzip-jp-gui/releases) and execute it.
 
 ### Manual
 
